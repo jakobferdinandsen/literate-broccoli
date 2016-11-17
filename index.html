@@ -35,10 +35,8 @@
             dataType: "json",
             async: false,
             success: function (data) {
-                console.log(data.text);
-                console.log(lastText);
                 if (lastText !== data.text) {
-                    CKEDITOR.instances['text'].setData(data.html);
+                    CKEDITOR.instances['text'].setData(data.text);
                     lastText = data.text;
                 }
 
