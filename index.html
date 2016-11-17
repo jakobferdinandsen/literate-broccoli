@@ -21,11 +21,19 @@
 <script>
     var interval;
     var lastText;
+    var bookmarks;
+    var editor = CKEDITOR.instances['text'];
+
     $(function () {
         interval = setInterval(read, 500);
         CKEDITOR.instances['text'].on('change', (function () {
             write();
         }));
+
+        CKEDITOR.on('instanceReady',
+                function (evt) {
+                    editor.execCommand('maximize');
+                });
     });
 
     function read() {
@@ -35,17 +43,20 @@
             dataType: "json",
             async: false,
             success: function (data) {
-                if (lastText !== data.text) {
-                    CKEDITOR.instances['text'].setData(data.text);
-                    lastText = data.text;
-                }
+//                if (lastText !== data.text) {
+                var editor = CKEDITOR.instances['text'];
+                storeCursorLocation(editor);
+                editor.document.getBody().setHtml(data.text);
+                restoreCursorLocation(editor);
+                lastText = data.text;
+//                }
 
             }
         });
     }
 
     function write() {
-        var text = CKEDITOR.instances['text'].getData();
+        var text = CKEDITOR.instances['text'].document.getBody().getHtml();
         $.ajax({
             method: "GET",
             url: "/php/write.php?",
@@ -56,4 +67,18 @@
             dataType: "json"
         });
     }
+
+
+    function storeCursorLocation(editor) {
+        bookmark = editor.getSelection().createBookmarks2(true);
+    }
+
+    function restoreCursorLocation(editor) {
+        try {
+            editor.getSelection().selectBookmarks(bookmark);
+        } catch(e){
+            console.log(e);
+        }
+    }
+
 </script>
