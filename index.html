@@ -9,7 +9,7 @@
         <script src="ckeditor/ckeditor.js"></script>
     </head>
     <body>
-        <textarea id="text" name="myTextBox" style="width:100%; height:100%;"></textarea>
+        <textarea id="text"  name="myTextBox" style="width:100%; height:100%;"></textarea>
 
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -19,6 +19,7 @@
 </html>
 
 <script>
+
     var interval;
     var lastText;
     $(function () {
@@ -38,7 +39,7 @@
                 console.log(data.text);
                 console.log(lastText);
                 if (lastText !== data.text) {
-                    CKEDITOR.instances['text'].setData(data.html);
+                    CKEDITOR.instances['text'].setData(data.text);
                     lastText = data.text;
                 }
 
